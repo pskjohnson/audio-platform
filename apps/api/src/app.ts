@@ -1,8 +1,8 @@
 import express from "express";
-// import health from "./routes/health";
-// import jobs from "./routes/jobs";
-// import { notFound } from "./routes/middleware/notFound";
-// import { errorHandler } from "./routes/middleware/error";
+import health from "./routes/health";
+import jobs from "./routes/jobs";
+import { notFound } from "./routes/middleware/notFound";
+import { errorHandler } from "./routes/middleware/error";
 
 export const app = express();
 
@@ -10,11 +10,11 @@ export const app = express();
 app.use(express.json());
 
 // Routes
-// app.use("/health", health);
-// app.use("/jobs", jobs);
+app.use("/health", health);
+app.use("/jobs", jobs);
 
 // 404 handler (must be after routes)
-// app.use(notFound);
+app.use(notFound);
 
 // Error handler (must be last)
-// app.use(errorHandler);
+app.use(errorHandler);
