@@ -1,7 +1,7 @@
 {
   "name": "audio-job-service",
   "version": "1.0.0",
-  "description": "Service that accpets audio files and processes them.",
+  "description": "Service that accepts audio files and processes them.",
   "main": "server.ts",
   "directories": {
     "test": "test"
@@ -12,7 +12,11 @@
     "build": "tsc",
     "start": "node dist/server.js",
     "test": "jest",
-    "db:migrate": "ts-node src/db/migrate.ts"
+    "db:migrate": "docker compose -f docker/postgres/docker-compose.yml run --rm migrate",
+    "db:up": "docker compose -f docker/postgres/docker-compose.yml up -d",
+    "db:down": "docker compose -f docker/postgres/docker-compose.yml down",
+    "db:reset": "docker compose -f docker/postgres/docker-compose.yml down -v && docker compose -f docker/postgres/docker-compose.yml up -d",
+    "db:psql": "docker compose -f docker/postgres/docker-compose.yml exec db psql -U test_user -d jobs_db"
   },
   "author": "",
   "license": "ISC",
@@ -22,8 +26,10 @@
     "@types/multer": "^2.0.0",
     "@types/node": "^25.0.2",
     "@types/pg": "^8.16.0",
+    "@types/supertest": "^6.0.3",
     "jest": "^30.2.0",
     "nodemon": "^3.1.11",
+    "supertest": "^7.1.4",
     "ts-jest": "^29.4.6",
     "ts-node": "^10.9.2",
     "typescript": "^5.9.3"
