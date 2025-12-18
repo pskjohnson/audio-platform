@@ -41,9 +41,9 @@ After that works, refactor to move transcription into the background worker.
 
 - [ ] Accepts a multipart form upload
 - [ ] Field name: file
-- [ ] Optional fields:
+<!-- - [ ] Optional fields:
   - [ ] language
-  - [ ] prompt
+  - [ ] prompt -->
 
 **Response**
 
@@ -141,34 +141,105 @@ Make sure you have the following installed:
 Copy `.env.example` to `.env` and fill in values.
 
 ### Install
-
 ```
 npm install
 ```
 
-### Database
 
-Create the database and run migrations.
+### Local Database Setup
 
+#### Prerequisites
+
+- Docker (with Docker Compose v2)
+- Node.js (for npm scripts)
+
+#### Start the database
+```
+npm run db:up
+```
+
+This starts a local Postgres instance in Docker and persists data in a Docker volume.
+
+#### Apply database migrations
 ```
 npm run db:migrate
 ```
 
-### Run the Server
+#### Connect to the database (psql)
+In a fresh terminal, run:
+```
+npm run db:psql
+```
 
+This opens an interactive psql shell inside the Postgres container.
+
+#### Reset the database (⚠ destructive)
+```
+npm run db:reset
+```
+This stops the database, deletes all data, recreates it, and restarts Postgres.
+Use this if you want a completely clean database.
+
+#### Stop the database
+```
+npm run db:down
+```
+
+Stops the Postgres container without deleting data.
+
+### Run the Server
 ```
 npm run dev
 ```
+
+or
+
+```
+npm run dev:watch
+```
+
+### How migrations work
+Migrations live in `src/db/migrations`
+
+Files are named like:
+```
+V1__create_jobs_table.sql
+V2__add_index.sql
+```
+
+- Each migration is applied once and tracked in `flyway_schema_history`
+- Never edit a migration that has already been applied
+- Always create a new migration for schema changes
+
+#### Common migration issues
+
+##### Migrations not found
+- Ensure migration files are in `src/db/migrations`
+- Ensure filenames follow Flyway’s `V<version>__<description>.sql` format
+
+##### Schema out of date
+Run: 
+```
+npm run db:migrate
+```
+
+### First time setup (TLDR)
+```
+npm run db:up
+npm run db:migrate
+```
+
+After this, the database is ready for use.
 
 ### Testing
 
 A basic health check test is provided.
 
 Add tests for:
-- job creation
-- job status retrieval
-- job result retrieval
-- error cases
+- [ ]  job creation
+- [ ] job status retrieval
+- [ ] job result retrieval
+- [ ] error cases
 
 Run tests:
 ```
