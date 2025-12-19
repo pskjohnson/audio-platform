@@ -30,23 +30,30 @@ router.post(
 // the request lands in the async express handler function 
     async (req: Request, res: Response, next: NextFunction) => {
         try {
-            // upload.single("file") creates the req.file upload.single adds a property to the req object
+            // First we validate the file 
+            // If its invalid we return error status 400
             if(!req.file) {
                 // returning status 400 for bad request from the client  
                 return res.status(400).json({Error: "File is required"})
             };
-            
+            // We generate a jobID
             const jobID = randomUUID();
-            // 1. Validate file exists
-            // 2. Insert job into database with status = 'queued'
-            // 3. Return job id
+            // Request the database to insert a new job and to return ID, status, and original_filename
 const queryInput = "INSERT INTO jobs (id, original_filename) VALUES($1, $2) RETURNING id, status, original_filename"
+// These values correspond to $1 and $2 in the SQL Query 
+            // Using parameterized queries protects against SQL injection 
             const valueInput = [jobID, req.file.originalname]
+// An array is never undefined, can either contain one object or no objects 
+            // Query function either returns an Array that has a single Object or an empty array  
+            // Extract the first element in the jobResult array 
+            // note that we are making a variable for the first element in the array (Js specific)
             const [jobResult] = await query<Pick<Job, "id" | "status" | "original_filename" >>(queryInput, valueInput)
+// If the array is empty we throw an Error that says failed to create job which is handled below
             if (!jobResult) {
                 throw new Error("Failed to create job");
             }
-            //201 means something was successfuly created, associate it with post 
+            // If all succeeds we return status code 201 with successful json message 
+            // 201 means something was successfuly created, associate it with post 
             return res.status(201).json({Message: `${jobResult.original_filename} successfully uploaded`})
         } catch (err) {
             next(err);
