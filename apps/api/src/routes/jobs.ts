@@ -100,11 +100,22 @@ router.get(
     async (req: Request, res: Response, next: NextFunction) => {
         try {
             // TODO:
-            // 1. Fetch job
-            // 2. If status !== 'done', return 404
-            // 3. Return transcript text
-
-            res.status(501).json({ error: "Not implemented" });
+            const jobId = req.params.id
+            const queryInput = "SELECT * FROM jobs WHERE id = $1"
+            const queryValues = [jobId]
+            const [jobResult] = await query<Pick<Job, "status" | "original_filename" | "transcription" >>(queryInput, queryValues)
+            // id exists? 
+            if(!jobResult) {
+                return res.status(404).json({ error: "job is not found" });
+            }
+            // if status != done, return 404 "job is not finished" 
+            if(jobResult.status != 'done'){
+            // otherwise return transcribed text 
+            return res.status(404).json({error: "job found but not finished"});
+            // save "text": "Transcribed audio text here" for every audio row in db 
+            }
+            return res.status(200).json({text: jobResult.transcription})
+            //res.status(200).json({ text: jobResult.transcription });
         } catch (err) {
             next(err);
         }
