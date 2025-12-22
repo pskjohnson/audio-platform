@@ -6,7 +6,6 @@ import {query} from "../db/index";
 import { Job } from "./types";
 
 const router = Router();
-
 // Configure file uploads (stored locally)
 const upload = multer({
     dest: "uploads/",
@@ -14,7 +13,6 @@ const upload = multer({
         fileSize: 25 * 1024 * 1024, // 25MB
     },
 });
-
 /**
  * POST /jobs
  * - Accept an audio file upload
@@ -34,27 +32,31 @@ router.post(
             // If its invalid we return error status 400
             if(!req.file) {
                 // returning status 400 for bad request from the client  
-                return res.status(400).json({Error: "File is required"})
+                return res.status(400).json({error: "File is required"})
             };
             // We generate a jobID
-            const jobID = randomUUID();
+            const jobId = randomUUID();
             // Request the database to insert a new job and to return ID, status, and original_filename
-const queryInput = "INSERT INTO jobs (id, original_filename) VALUES($1, $2) RETURNING id, status, original_filename"
+            const queryString = "INSERT INTO jobs (id, original_filename) VALUES($1, $2) RETURNING id, status, original_filename"
 // These values correspond to $1 and $2 in the SQL Query 
             // Using parameterized queries protects against SQL injection 
-            const valueInput = [jobID, req.file.originalname]
+            const queryValues = [jobId, req.file.originalname]
 // An array is never undefined, can either contain one object or no objects 
             // Query function either returns an Array that has a single Object or an empty array  
             // Extract the first element in the jobResult array 
             // note that we are making a variable for the first element in the array (Js specific)
-            const [jobResult] = await query<Pick<Job, "id" | "status" | "original_filename" >>(queryInput, valueInput)
+            const [jobResult] = await query<Pick<Job, "id" | "status" | "original_filename" >>(queryString, queryValues)
 // If the array is empty we throw an Error that says failed to create job which is handled below
             if (!jobResult) {
                 throw new Error("Failed to create job");
             }
+            transcribe(jobId)
             // If all succeeds we return status code 201 with successful json message 
             // 201 means something was successfuly created, associate it with post 
-            return res.status(201).json({Message: `${jobResult.original_filename} successfully uploaded`})
+            return res.status(201).json({
+                jobId: jobResult.id,
+                status: jobResult.status
+        });
         } catch (err) {
             next(err);
         }
