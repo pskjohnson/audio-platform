@@ -20,12 +20,12 @@ const upload = multer({
  * - Return job id and initial status
  */
 router.post(
-// router.post creates a POST endpoint at the root route of that router 
+    // router.post creates a POST endpoint at the root route of that router 
     "/",
-// upload.single("file") is a middleware that handles our file upload 
+    // upload.single("file") is a middleware that handles our file upload 
     // handles our file upload by attaching it to req.file 
     upload.single("file"),
-// the request lands in the async express handler function 
+    // the request lands in the async express handler function 
     async (req: Request, res: Response, next: NextFunction) => {
         try {
             // First we validate the file 
@@ -34,19 +34,19 @@ router.post(
                 // returning status 400 for bad request from the client  
                 return res.status(400).json({error: "File is required"})
             };
-            // We generate a jobID
+            // We generate a jobID 
             const jobId = randomUUID();
-            // Request the database to insert a new job and to return ID, status, and original_filename
+            // Request the database to insert a new job and to return ID, status, and original_filename  
             const queryString = "INSERT INTO jobs (id, original_filename) VALUES($1, $2) RETURNING id, status, original_filename"
-// These values correspond to $1 and $2 in the SQL Query 
+            // These values correspond to $1 and $2 in the SQL Query 
             // Using parameterized queries protects against SQL injection 
             const queryValues = [jobId, req.file.originalname]
-// An array is never undefined, can either contain one object or no objects 
+            // An array is never undefined, can either contain one object or no objects 
             // Query function either returns an Array that has a single Object or an empty array  
             // Extract the first element in the jobResult array 
             // note that we are making a variable for the first element in the array (Js specific)
             const [jobResult] = await query<Pick<Job, "id" | "status" | "original_filename" >>(queryString, queryValues)
-// If the array is empty we throw an Error that says failed to create job which is handled below
+            // If the array is empty we throw an Error that says failed to create job which is handled below
             if (!jobResult) {
                 throw new Error("Failed to create job");
             }
@@ -71,12 +71,20 @@ router.get(
     "/:id",
     async (req: Request, res: Response, next: NextFunction) => {
         try {
-            // TODO:
-            // 1. Parse job id
-            // 2. Fetch job from database
-            // 3. Return job status or 404
-
-            res.status(501).json({ error: "Not implemented" });
+            const jobId = req.params.id 
+            const queryInput = "SELECT * FROM jobs WHERE id = $1"
+            const queryValues = [jobId]
+            const [jobResult] = await query<Pick<Job, "id" | "status" | "created_at" | "updated_at" >>(queryInput, queryValues)
+            if(!jobResult) {
+                return res.status(404).json({ error: "job not found" })
+            }
+            return res.status(200).json({
+                jobId: jobResult.id,
+                status: jobResult.status,
+                createdAt: jobResult.created_at,
+                updatedAt: jobResult.updated_at
+                
+             });
         } catch (err) {
             next(err);
         }
