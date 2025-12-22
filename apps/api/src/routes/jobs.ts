@@ -4,6 +4,7 @@ import multer from "multer";
 import { randomUUID } from "node:crypto";
 import {query} from "../db/index";
 import { Job } from "./types";
+import { transcribe } from "./services/transcription";
 
 const router = Router();
 // Configure file uploads (stored locally)
