@@ -1,22 +1,19 @@
 services:
   db:
+    env_file: 
+      - ../../.env
     image: postgres:16.11
     ports:
       - "5432:5432"
-    environment:
-      POSTGRES_DB: jobs_db
-      POSTGRES_USER: test_user
-      POSTGRES_PASSWORD: test_pass
+      
     volumes:
       - pgdata:/var/lib/postgresql/data
 
   migrate:
     image: flyway/flyway
     command: migrate
-    environment:
-      FLYWAY_URL: jdbc:postgresql://db:5432/jobs_db
-      FLYWAY_USER: test_user
-      FLYWAY_PASSWORD: test_pass
+    env_file:
+      - ../../.env
     volumes:
       - ../../src/db/migrations:/flyway/sql
     depends_on:
