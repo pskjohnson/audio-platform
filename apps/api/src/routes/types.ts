@@ -4,6 +4,7 @@ export type Job = {
     updated_at: Date;  
     status: "queued" | "processing" | "done" | "error";
     original_filename: string;
+    transcription: string | null;
     error_message: string | null; 
   };
   
