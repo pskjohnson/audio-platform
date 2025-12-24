@@ -80,11 +80,10 @@ router.get(
                 return res.status(404).json({ error: "job not found" })
             }
             return res.status(200).json({
-                jobId: jobResult.id,
+                id: jobResult.id,
                 status: jobResult.status,
-                createdAt: jobResult.created_at,
-                updatedAt: jobResult.updated_at
-                
+                created_at: jobResult.created_at,
+                updated_at: jobResult.updated_at
              });
         } catch (err) {
             next(err);
@@ -115,7 +114,7 @@ router.get(
             return res.status(202).json({error: "job found but not finished"});
             // save "text": "Transcribed audio text here" for every audio row in db 
             }
-            return res.status(200).json({text: jobResult.transcription})
+            return res.status(200).json({text: jobResult.transcription});
             //res.status(200).json({ text: jobResult.transcription });
         } catch (err) {
             next(err);
