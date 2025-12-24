@@ -51,12 +51,12 @@ router.post(
             if (!jobResult) {
                 throw new Error("Failed to create job");
             }
-            const postTranscribe = await transcribe(jobId)
+            transcribe(jobId)
             // If all succeeds we return status code 201 with successful json message 
             // 201 means something was successfuly created, associate it with post 
             return res.status(201).json({
-                id: postTranscribe.id,
-                status: postTranscribe.status
+                jobId: jobResult.id,
+                status: jobResult.status
             });
         } catch (err) {
             next(err);
@@ -80,10 +80,10 @@ router.get(
                 return res.status(404).json({ error: "job not found" })
             }
             return res.status(200).json({
-                id: jobResult.id,
+                jobId: jobResult.id,
                 status: jobResult.status,
-                created_at: jobResult.created_at,
-                updated_at: jobResult.updated_at
+                createdAt: jobResult.created_at,
+                updatedAt: jobResult.updated_at
             });
         } catch (err) {
             next(err);
