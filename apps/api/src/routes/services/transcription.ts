@@ -1,7 +1,7 @@
 import { query } from "../../db";
 import { Job } from "../types";
 
-export async function transcribe(jobId: string) : Promise<Job> {
+export async function transcribe(jobId: string) : Promise<void> {
     const queryString = "UPDATE jobs SET status = 'processing' WHERE id = $1 RETURNING *"
     const queryValues = [jobId]
     const [preTranscriptionJob] = await query(queryString, queryValues)
@@ -16,5 +16,4 @@ export async function transcribe(jobId: string) : Promise<Job> {
     if (postTranscriptionJob.length ===0){
         throw new Error("Job not updated")
     }
-    return postTranscriptionJob;
 }
