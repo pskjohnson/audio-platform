@@ -57,7 +57,7 @@ router.post(
             return res.status(201).json({
                 id: postTranscribe.id,
                 status: postTranscribe.status
-        });
+            });
         } catch (err) {
             next(err);
         }
@@ -84,7 +84,7 @@ router.get(
                 status: jobResult.status,
                 created_at: jobResult.created_at,
                 updated_at: jobResult.updated_at
-             });
+            });
         } catch (err) {
             next(err);
         }
@@ -111,7 +111,7 @@ router.get(
             // if status != done, return 404 "job is not finished" 
             if(jobResult.status != 'done'){
             // otherwise return transcribed text 
-            return res.status(202).json({error: "job found but not finished"});
+                return res.status(202).json({error: "job found but not finished"});
             // save "text": "Transcribed audio text here" for every audio row in db 
             }
             return res.status(200).json({text: jobResult.transcription});

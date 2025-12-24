@@ -4,8 +4,10 @@ const config: Config = {
     preset: "ts-jest",
     testEnvironment: "node",
     testMatch: [
-        "**/*.test.ts"
-    ]
+        "**/*.test.ts",
+        "**/*.spec.ts"
+    ],
+    clearMocks: true
 };
 
 export default config;
