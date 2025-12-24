@@ -5,7 +5,8 @@ const config: Config = {
     testEnvironment: "node",
     testMatch: [
         "**/*.test.ts"
-    ]
+    ],
+    clearMocks: true
 };
 
 export default config;

@@ -1,4 +1,5 @@
 import { query } from "../../db";
+import { Job } from "../types";
 
 export async function transcribe(jobId: string) : Promise<void> {
     const queryString = "UPDATE jobs SET status = 'processing' WHERE id = $1 RETURNING *"
