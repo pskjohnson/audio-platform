@@ -100,7 +100,6 @@ router.get(
     "/:id/result",
     async (req: Request, res: Response, next: NextFunction) => {
         try {
-            // TODO:
             const jobId = req.params.id
             const queryInput = "SELECT * FROM jobs WHERE id = $1"
             const queryValues = [jobId]
