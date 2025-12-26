@@ -1,9 +1,10 @@
 // src/routes/jobs.ts
-import { Router, Request, Response, NextFunction } from "express";
+import type { Request, Response, NextFunction } from "express";
+import { Router } from "express";
 import multer from "multer";
 import { randomUUID } from "node:crypto";
 import {query} from "../db/index";
-import { Job } from "./types";
+import type { Job } from "./types";
 import { transcribe } from "./services/transcription";
 
 const router = Router();
