@@ -38,7 +38,7 @@ services:
       - SERVICES=s3,sqs
 
     volumes:
-      - "./localstack/init:/etc/localstack/init/ready.d"
+      - "./infra/localstack/init:/etc/localstack/init/ready.d"
       # Persist LocalStack state on host machine - keeps S3 buckets, SQS queues, etc. between restarts
       - ./data/localstack:/var/lib/localstack"
 
