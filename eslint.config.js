@@ -3,16 +3,24 @@ import tseslint from 'typescript-eslint';
 import prettier from 'eslint-config-prettier';
 
 export default tseslint.config(
-  // 1️⃣ Base JS rules
+    {
+    ignores: [
+      '**/node_modules/**',
+      '**/dist/**',
+      '**/build/**',
+    ],
+  },
+  // Base JS rules (all files)
   js.configs.recommended,
 
-  // 2️⃣ TypeScript recommended rules
+  // TypeScript rules
   ...tseslint.configs.recommended,
-
-  // 3️⃣ Prettier (disables formatting rules)
+  
+  // Prettier (disables formatting rules, must be last)
   prettier,
 
-  // 4️⃣ Project-specific rules
+
+  // Project-specific rules
   {
     files: ['**/*.ts', '**/*.tsx'],
     rules: {
