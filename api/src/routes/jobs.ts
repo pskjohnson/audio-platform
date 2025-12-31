@@ -56,7 +56,7 @@ router.post(
       if (!jobResult) {
         throw new Error("Failed to create job");
       }
-      transcribe(jobId);
+      void transcribe(jobId);
       // If all succeeds we return status code 201 with successful json message
       // 201 means something was successfuly created, associate it with post
       return res.status(201).json({
