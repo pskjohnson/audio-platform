@@ -15,7 +15,7 @@ services:
     env_file:
       - .env
     volumes:
-      - ./src/db/migrations:/flyway/sql
+      - ./api/src/db/migrations:/flyway/sql
     depends_on:
       - db
 
@@ -38,9 +38,9 @@ services:
       - SERVICES=s3,sqs
 
     volumes:
-      - "./localstack/init:/etc/localstack/init/ready.d"
+      - "./infra/localstack/init:/etc/localstack/init/ready.d"
       # Persist LocalStack state on host machine - keeps S3 buckets, SQS queues, etc. between restarts
-      - ./data/localstack:/var/lib/localstack"
+      - ./data/localstack:/var/lib/localstack
 
 volumes:
   pgdata:
