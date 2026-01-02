@@ -14,8 +14,10 @@ export const db = new Pool({
  * Helper for running queries.
  * Use this instead of calling db.query directly.
  */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export async function query<T = any>(
     text: string,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     params?: any[]
 ): Promise<T[]> {
     const result = await db.query(text, params);

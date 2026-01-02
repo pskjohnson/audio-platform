@@ -7,18 +7,11 @@
     "test": "test"
   },
   "scripts": {
-    "dev": "ts-node src/server.ts",
-    "dev:watch": "nodemon --watch src --ext ts --exec ts-node src/server.ts",
+    "dev": "nodemon",
     "build": "tsc",
     "start": "node dist/server.js",
     "test": "jest",
-    "test:watch": "jest --watch",
-    "db:migrate": "docker compose -f docker/postgres/docker-compose.yml run --rm migrate",
-    "db:up": "docker compose -f docker/postgres/docker-compose.yml up -d",
-    "db:down": "docker compose -f docker/postgres/docker-compose.yml down",
-    "db:reset": "docker compose -f docker/postgres/docker-compose.yml down -v && docker compose -f docker/postgres/docker-compose.yml up -d",
-    "db:psql": "docker compose -f docker/postgres/docker-compose.yml exec db psql -U test_user -d jobs_db"
-    
+    "test:watch": "jest --watch"
   },
   "author": "",
   "license": "ISC",

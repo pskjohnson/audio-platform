@@ -1,3 +1,4 @@
-apps/api/uploads/*
+api/uploads/*
 node_modules
 dist/
+**/.env
