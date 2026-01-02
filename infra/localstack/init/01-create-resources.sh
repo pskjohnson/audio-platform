@@ -7,9 +7,9 @@
 # This makes init failures loud and deterministic
 set -euo pipefail
 
-REGION="${AWS_DEFAULT_REGION:-us-west-2}"
+REGION="${AWS_DEFAULT_REGION:-us-east-1}"
 
-BUCKET_NAME="${AUDIO_BUCKET_NAME:-audio-platform-bucket}"
+BUCKET_NAME="${AUDIO_BUCKET_NAME:-audio-uploads}"
 QUEUE_NAME="${TRANSCRIBE_QUEUE_NAME:-transcribe-jobs}"
 
 # Create the S3 bucket if it does not already exist.
@@ -23,7 +23,7 @@ awslocal s3api create-bucket --bucket "${BUCKET_NAME}" --region "${REGION}" 2>/d
 # - SQS create-queue is idempotent for the same name
 # - Query extracts the QueueUrl for logging/debugging
 echo "[localstack-init] Creating SQS queue: ${QUEUE_NAME}"
-QUEUE_URL="$(awslocal sqs create-queue --queue-name "${QUEUE_NAME}" --query 'QueueUrl' --output text 2>/dev/null || true)"
+QUEUE_URL="$(awslocal sqs create-queue --queue-name "${QUEUE_NAME}" --region "${REGION}" --query 'QueueUrl' --output text 2>/dev/null || true)"
 
 # Final log line to confirm successful provisioning
 echo "[localstack-init] Done. Bucket=${BUCKET_NAME}, Queue=${QUEUE_NAME}, QueueUrl=${QUEUE_URL:-unknown}"
